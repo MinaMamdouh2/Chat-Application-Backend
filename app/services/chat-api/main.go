@@ -97,12 +97,6 @@ func run(log *zap.SugaredLogger, ctx context.Context) error {
 
 	log.Info("startup", "config", out)
 
-	// Simple keystore.
-	// ks, err := keystore.NewFS(os.DirFS(cfg.Auth.KeysFolder))
-	// if err != nil {
-	// 	return fmt.Errorf("reading keys: %w", err)
-	// }
-
 	if err != nil {
 		return fmt.Errorf("constructing auth: %w", err)
 	}
