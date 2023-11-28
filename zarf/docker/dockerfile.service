@@ -30,7 +30,7 @@ ARG BUILD_REF
 # inside a container or inside a cluster
 RUN addgroup -g 1000 -S chat && \
   adduser -u 1000 -h /service -G chat -S chat
-COPY --from=build_chat-api --chown=chat:chat /service/zarf/keys/. /service/zarf/keys/.
+
 COPY --from=build_chat-api --chown=chat:chat /service/app/services/chat-api/chat-api /service/chat-api
 COPY --from=build_chat-api --chown=sales:sales /service/app/tooling/admin/admin /service/admin
 
