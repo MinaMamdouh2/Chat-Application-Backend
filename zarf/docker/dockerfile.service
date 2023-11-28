@@ -18,6 +18,10 @@ COPY . /service
 WORKDIR /service/app/services/chat-api
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
+# Build the admin binary.
+WORKDIR /service/app/tooling/admin
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
 # Run the Go Binary in Alpine.
 FROM alpine:3.18
 ARG BUILD_DATE
@@ -28,9 +32,11 @@ RUN addgroup -g 1000 -S chat && \
   adduser -u 1000 -h /service -G chat -S chat
 COPY --from=build_chat-api --chown=chat:chat /service/zarf/keys/. /service/zarf/keys/.
 COPY --from=build_chat-api --chown=chat:chat /service/app/services/chat-api/chat-api /service/chat-api
+COPY --from=build_chat-api --chown=sales:sales /service/app/tooling/admin/admin /service/admin
+
 WORKDIR /service
 USER chat
-CMD ["./chat-api"]
+CMD ["sh", "-c", "./admin && ./chat-api"]
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
   org.opencontainers.image.title="chat-api" \
